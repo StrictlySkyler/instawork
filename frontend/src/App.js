@@ -79,32 +79,73 @@ function Edit (props) {
   )
 }
 
+function Login (props) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const username = e.target[0].value;
+    const password = e.target[1].value;
+    props.onUpdate(username, password);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Please login:</h2>
+      <label>
+        Username:
+        <input 
+          type='text' 
+          placeholder='email@example.com' 
+          autoComplete='email'
+        />
+      </label>
+      <label>
+        Password:
+        <input 
+          type='password' 
+          placeholder='password' 
+          autoComplete='password'
+        />
+      </label>
+      <button>Login</button>
+    </form>
+  )
+}
+
 export default class App extends React.Component {
   state = {
     members: [],
+    username: '',
+    password: '',
   };
    
   componentDidMount(){
-    const api_url = 'http://localhost:8000/api/v1/member/';
-    const auth = {
-      username: 'strictlyskyler@gmail.com',
-      password: 'password',
-    };
-    let data;
-
-    axios.get(api_url, { auth })
-    .then(res => {
-      data = res.data;
-      this.setState({
-        members: data
-      });
-    })
-    .catch(err => { })
-
+    
   }
-
-
+  
   render() {
+    const updateAuthState = (username, password) => {
+      this.setState({ username, password });
+      const api_url = 'http://localhost:8000/api/v1/member/';
+      const auth = {
+        username,
+        password,
+      };
+      let data;
+    
+      axios.get(api_url, { auth })
+      .then(res => {
+        data = res.data;
+        this.setState({
+          members: data
+        });
+      })
+      .catch(err => { })
+    }
+
+    if (!this.state.username || !this.state.password) {
+      return <Login onUpdate={updateAuthState} />;
+    }
+    else if (!this.state.members.length) return <h2>Loading...</h2>
     return (
       <Router>
         <Routes>

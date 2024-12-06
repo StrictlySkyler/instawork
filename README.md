@@ -2,6 +2,8 @@ Time spent:
 1. Design & thinking ~(like a long-running cron)
 2. Setup & Scaffolding 30min (`89318e3`)
 3. Routing 30min (`bba60e0`)
+4. Login backend functionality 1hr (`e27e595`)
+5. Login frontend functionality 30min (`12286e0`)
 
 TODO:
 1. Design & Thinking
@@ -12,6 +14,6 @@ TODO:
 6. Delete member
 7. Frontend validation
 8. Backend validation
-9. Login
+9. ~~Login~~
 10. Styling
 11. Tests
