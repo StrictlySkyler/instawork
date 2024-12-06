@@ -85,10 +85,14 @@ export default class App extends React.Component {
   };
    
   componentDidMount(){
-
+    const api_url = 'http://localhost:8000/api/v1/member/';
+    const auth = {
+      username: 'strictlyskyler@gmail.com',
+      password: 'password',
+    };
     let data;
 
-    axios.get('http://localhost:8000')
+    axios.get(api_url, { auth })
     .then(res => {
       data = res.data;
       this.setState({

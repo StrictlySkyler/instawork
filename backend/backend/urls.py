@@ -1,5 +1,5 @@
 """
-URL configuration for assignment project.
+URL configuration for backend project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -21,5 +21,5 @@ from members.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', MemberView.as_view(), name="anything")
+    path('api/v1/member/', MemberView.as_view(), name="MemberViewURL")
 ]
