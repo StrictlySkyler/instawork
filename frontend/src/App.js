@@ -11,6 +11,18 @@ import {
 } from 'react-router-dom';
 
 const API_URL = 'http://localhost:8000/api/v1/member/';
+const FIELD_COUNT = 5;
+
+function checkValidMember (member) {
+  let valid = true;
+  const keys = Object.keys(member);
+  if (keys.length != FIELD_COUNT) valid = false;
+  keys.forEach(key => {
+    if (member[key] == undefined) valid = false;
+  });
+
+  return valid;
+}
 
 function List (props) {
   return (
@@ -58,12 +70,17 @@ function Add (props) {
   const {auth} = props;
   const navigate = useNavigate();
   function saveMember (e) {
-    e.preventDefault()
+    if (!checkValidMember(member)) {
+      return alert(`Please fill out all fields!`);
+    }
     axios.post(API_URL, member, { auth })
       .then((res) => {
         const members = res.data;
         props.updateMemberState(members);
         navigate('/')
+      }).catch(err => {
+        alert(`Something went wrong! Code: ${err.response.status}`);
+        console.error(err);
       });
   }
 
@@ -151,15 +168,22 @@ function Edit (props) {
   const navigate = useNavigate();
 
   function saveMember (e) {
-    e.preventDefault()
+    if (!checkValidMember(member)) {
+      return alert(`Please fill out all fields!`);
+    }
     axios.post(API_URL, member, { auth })
   }
   function deleteMember (e) {
     e.preventDefault();
+    if (!window.confirm(`Delete member ${member.email}?`)) return;
     axios.delete(API_URL, { auth, data: member })
       .then(res => {
         props.updateMemberState(res.data);
         navigate('/')
+      })
+      .catch(err => {
+        alert(`Something went wrong! Code: ${err.response.status}`);
+        console.error(err);
       });
   };
 
@@ -302,10 +326,11 @@ function Login (props) {
 export default class App extends React.Component {
   state = {
     members: [],
-    username: '',
-    password: '',
-    // username: 'strictlyskyler@gmail.com',
-    // password: 'password',
+    // username: '',
+    // password: '',
+    // autologin for debugging
+    username: 'strictlyskyler@gmail.com',
+    password: 'password',
   };
   
   render() {
@@ -326,7 +351,10 @@ export default class App extends React.Component {
           admin: data.admin,
         });
       })
-      .catch(err => { })
+      .catch(err => {
+        alert(`Unable to login! Code: ${err.response.status}`);
+        console.error(err);
+      })
     }
 
     const updateMemberState = (members) => {
