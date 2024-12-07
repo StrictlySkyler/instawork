@@ -9,6 +9,8 @@ def get_password(length=10, chars=allowed_chars):
     return ''.join(secrets.choice(chars) for i in range(length))
 
 class MemberSerializer(serializers.ModelSerializer):
+    admin = serializers.CharField(source='is_superuser')
+
     class Meta:
         model = User
         fields = [
@@ -16,7 +18,11 @@ class MemberSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'phone',
+            'admin',
           ]
+        
+    def get_is_superuser(self, obj):
+        return obj.is_superuser
 
     def create(self, data):
         new_password = get_password()
@@ -27,7 +33,7 @@ class MemberSerializer(serializers.ModelSerializer):
             phone=data['phone'],
             username=data['email'],
             is_staff=1,
-            is_superuser=0,
+            is_superuser=int(data['is_superuser']),
         )
         user.set_password(new_password);
         # If we had an SMTP server, we'd email this to a new user with

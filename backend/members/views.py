@@ -70,11 +70,40 @@ class MemberView(APIView):
         elif logged_in:
           try:
             serializer = MemberSerializer(data=request.data)
+            print(serializer)
             if serializer.is_valid(raise_exception=True):
               serializer.save()
-            return HttpResponse('Created', 201)
+              member_list = [{
+                "id": member.id,
+                "first_name": member.first_name,
+                "last_name": member.last_name,
+                "email": member.email,
+                "phone": member.phone,
+                "admin": member.is_superuser,
+              } for member in User.objects.all()]
+            return HttpResponse(json.dumps(member_list), 201)
           except ValidationError as e:
              print(e)
              return HttpResponse('Invalid', 400)
         else:
           return HttpResponse('Forbidden', 403)
+        
+    def delete(self, request):
+        try:
+          logged_in = check_login(request.META['HTTP_AUTHORIZATION'])
+        except AuthenticationFailed:
+          return HttpResponse('Unauthorized', 401)
+        
+        user_found = User.objects.get(id=request.data['id'])
+        
+        if logged_in == 2:
+           user_found.delete()
+           member_list = [{
+              "id": member.id,
+              "first_name": member.first_name,
+              "last_name": member.last_name,
+              "email": member.email,
+              "phone": member.phone,
+              "admin": member.is_superuser,
+            } for member in User.objects.all()]
+           return HttpResponse(json.dumps(member_list), 205)

@@ -5,7 +5,8 @@ Time spent:
 4. Login backend functionality 1hr (`e27e595`)
 5. Login frontend functionality 30min (`6f64933`)
 6. List, Add, Edit page forms, & Styling 90min (`bc73459`)
-7. Add/Edit member functionality 1hr
+7. Add/Edit member functionality 1hr (`d94b763`)
+8. Delete member functionality 30min
 
 TODO:
 1. Design & Thinking
@@ -13,7 +14,7 @@ TODO:
 3. ~~Routing~~
 4. ~~List, Add, Edit Page forms~~
 5. ~~Add member functionality~~
-6. Delete member
+6. ~~Delete member~~
 7. Frontend validation
 8. Backend validation
 9. ~~Login~~

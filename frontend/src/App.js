@@ -7,6 +7,7 @@ import {
   Route,
   Link,
   useSearchParams,
+  useNavigate,
 } from 'react-router-dom';
 
 const API_URL = 'http://localhost:8000/api/v1/member/';
@@ -55,9 +56,15 @@ function List (props) {
 function Add (props) {
   const member = {};
   const {auth} = props;
+  const navigate = useNavigate();
   function saveMember (e) {
     e.preventDefault()
     axios.post(API_URL, member, { auth })
+      .then((res) => {
+        const members = res.data;
+        props.updateMemberState(members);
+        navigate('/')
+      });
   }
 
   return (
@@ -107,7 +114,7 @@ function Add (props) {
               required
               className="float-right" type="radio" defaultValue="0" 
               onChange={(e) => {
-                if (e.target.checked) member.admin = false;
+                if (e.target.checked) member.admin = 0;
               }}
             />
             <hr/>
@@ -121,7 +128,7 @@ function Add (props) {
               name="is-admin"
               className="float-right" type="radio" defaultValue="1" 
               onChange={(e) => {
-                if (e.target.checked) member.admin = true;
+                if (e.target.checked) member.admin = 1;
               }}
             />
             <hr/>
@@ -141,12 +148,20 @@ function Edit (props) {
   const id = parseInt(searchParams.get('id'), 10);
   const member = props.members[id];
   const {auth} = props;
+  const navigate = useNavigate();
 
   function saveMember (e) {
     e.preventDefault()
     axios.post(API_URL, member, { auth })
   }
-  function deleteMember (e) {};
+  function deleteMember (e) {
+    e.preventDefault();
+    axios.delete(API_URL, { auth, data: member })
+      .then(res => {
+        props.updateMemberState(res.data);
+        navigate('/')
+      });
+  };
 
   return (
     <div className="container">
@@ -232,7 +247,7 @@ function Edit (props) {
             <button
               onClick={deleteMember}
               disabled={props.admin != 2}
-              className="disabled:opacity-25 w-full border-red-500 border py-2 my-2 rounded"
+              className="disabled:opacity-25 w-full border-red-500 border py-2 my-2 rounded hover:bg-red-300 active:bg-red-700"
             >Delete</button>
           </form>
         }
@@ -245,7 +260,7 @@ function Login (props) {
     e.preventDefault();
     const username = e.target[0].value;
     const password = e.target[1].value;
-    props.onUpdate(username, password);
+    props.updateAuthState(username, password);
   };
 
   return (
@@ -289,6 +304,8 @@ export default class App extends React.Component {
     members: [],
     username: '',
     password: '',
+    // username: 'strictlyskyler@gmail.com',
+    // password: 'password',
   };
   
   render() {
@@ -312,8 +329,12 @@ export default class App extends React.Component {
       .catch(err => { })
     }
 
+    const updateMemberState = (members) => {
+      this.setState({members});
+    }
+
     if (!this.state.username || !this.state.password) {
-      return <Login onUpdate={updateAuthState} />;
+      return <Login updateAuthState={updateAuthState} />;
     }
     else if (!this.state.members.length) {
       updateAuthState(this.state.username, this.state.password);
@@ -328,6 +349,7 @@ export default class App extends React.Component {
             element={<Add 
               members={this.state.members} 
               auth={{username, password}}
+              updateMemberState={updateMemberState}
             />} 
           />
           <Route 
@@ -336,6 +358,7 @@ export default class App extends React.Component {
               members={this.state.members} 
               auth={{username, password}} 
               admin={this.state.admin}
+              updateMemberState={updateMemberState}
             />} 
           />
           <Route path="/" element={<List members={this.state.members} />} />
