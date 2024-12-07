@@ -27,6 +27,7 @@ class MemberView(APIView):
                 "last_name": member.last_name,
                 "email": member.email,
                 "phone": member.phone,
+                "admin": member.is_superuser,
               } for member in User.objects.all()]
             return Response(member_list)
           else:
