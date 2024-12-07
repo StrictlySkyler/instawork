@@ -9,6 +9,8 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
+const API_URL = 'http://localhost:8000/api/v1/member/';
+
 function List (props) {
   return (
     <div className="container">
@@ -51,6 +53,13 @@ function List (props) {
 }
 
 function Add (props) {
+  const member = {};
+  const {auth} = props;
+  function saveMember (e) {
+    e.preventDefault()
+    axios.post(API_URL, member, { auth })
+  }
+
   return (
     <div className="container">
       <header>
@@ -68,18 +77,22 @@ function Add (props) {
           <input 
             className="p-2 my-2 border w-full" 
             type="text" placeholder="First Name" required
-            />
+            onChange={(e) => {member.first_name = e.target.value}}
+          />
           <input 
             className="p-2 my-2 border w-full" 
             type="text" placeholder="last name" required
-            />
+            onChange={(e) => {member.last_name = e.target.value}}
+          />
           <input 
             className="p-2 my-2 border w-full" 
             type="email" placeholder="email@example.com" required
-            />
+            onChange={(e) => {member.email = e.target.value}}
+          />
           <input 
             className="p-2 my-2 border w-full" 
             type="tel" placeholder="555-555-5555" required
+            onChange={(e) => {member.phone = e.target.value}}
           />
         </fieldset>
         <fieldset>
@@ -93,6 +106,9 @@ function Add (props) {
               name="is-admin"
               required
               className="float-right" type="radio" defaultValue="0" 
+              onChange={(e) => {
+                if (e.target.checked) member.admin = false;
+              }}
             />
             <hr/>
           </div>
@@ -104,12 +120,16 @@ function Add (props) {
               id="admin"
               name="is-admin"
               className="float-right" type="radio" defaultValue="1" 
+              onChange={(e) => {
+                if (e.target.checked) member.admin = true;
+              }}
             />
             <hr/>
           </div>
         </fieldset>
         <button
           className="w-full bg-blue-500 text-white py-2 rounded"
+          onClick={saveMember}
         >Save</button>
       </form>
     </div>
@@ -120,9 +140,13 @@ function Edit (props) {
   const [searchParams] = useSearchParams();
   const id = parseInt(searchParams.get('id'), 10);
   const member = props.members[id];
+  const {auth} = props;
 
-  const saveMember = (e) => {};
-  const deleteMember = (e) => {};
+  function saveMember (e) {
+    e.preventDefault()
+    axios.post(API_URL, member, { auth })
+  }
+  function deleteMember (e) {};
 
   return (
     <div className="container">
@@ -144,21 +168,25 @@ function Edit (props) {
                 className="p-2 my-2 border w-full" 
                 type="text" placeholder="First Name" required
                 defaultValue={member.first_name}
+                onChange={(e) => {member.first_name = e.target.value}}
               />
               <input 
                 className="p-2 my-2 border w-full" 
                 type="text" placeholder="last name" required
                 defaultValue={member.last_name}
+                onChange={(e) => {member.last_name = e.target.value}}
               />
               <input 
                 className="p-2 my-2 border w-full" 
                 type="email" placeholder="email@example.com" required
                 defaultValue={member.email}
+                onChange={(e) => {member.emal = e.target.value}}
               />
               <input 
                 className="p-2 my-2 border w-full" 
                 type="tel" placeholder="555-555-5555" required
                 defaultValue={member.phone}
+                onChange={(e) => {member.phone = e.target.value}}
               />
             </fieldset>
             <fieldset>
@@ -172,6 +200,10 @@ function Edit (props) {
                   name="is-admin"
                   required
                   defaultChecked={!member.admin}
+                  onChange={(e) => {
+                    if (e.target.checked) member.admin = false;
+                  }}
+                  disabled={props.admin != 2}
                   className="float-right" type="radio" defaultValue="0" 
                 />
                 <hr/>
@@ -184,7 +216,10 @@ function Edit (props) {
                   id="admin"
                   name="is-admin"
                   defaultChecked={member.admin}
-                  disabled={!member.admin}
+                  onChange={(e) => {
+                    if (e.target.checked) member.admin = true;
+                  }}
+                  disabled={props.admin != 2}
                   className="float-right" type="radio" defaultValue="1" 
                 />
                 <hr/>
@@ -192,11 +227,12 @@ function Edit (props) {
             </fieldset>
             <button
               onClick={saveMember}
-              className="w-full bg-blue-500 text-white py-2 my-2 rounded"
+              className="w-full bg-blue-500 text-white py-2 my-2 rounded hover:bg-blue-300 active:bg-blue-700"
             >Save</button>
             <button
               onClick={deleteMember}
-              className="w-full border-red-500 border py-2 my-2 rounded"
+              disabled={props.admin != 2}
+              className="disabled:opacity-25 w-full border-red-500 border py-2 my-2 rounded"
             >Delete</button>
           </form>
         }
@@ -220,7 +256,7 @@ function Login (props) {
         <label>
           Username:
           <input 
-            className="w-full"
+            className="w-full border rounded p-2 my-2"
             type='text' 
             placeholder='email@example.com' 
             autoComplete='email'
@@ -231,15 +267,18 @@ function Login (props) {
         <label className="w-full">
           Password:
           <input 
-            className="w-full"
+            className="w-full border rounded p-2 my-2"
             type='password' 
             placeholder='password' 
             autoComplete='password'
             />
         </label>
       </div>
-      <div className="w-full my-2 px-2">
-        <button className="bg-blue-500 text-white w-full">Login</button>
+      <div className="w-full">
+        <button 
+          className="bg-blue-500 text-white w-full my-2 p-2 rounded">
+            Login
+          </button>
       </div>
     </form>
   )
@@ -248,27 +287,26 @@ function Login (props) {
 export default class App extends React.Component {
   state = {
     members: [],
-    // username: '',
-    // password: '',
-    username: 'strictlyskyler@gmail.com',
-    password: 'password',
+    username: '',
+    password: '',
   };
   
   render() {
     const updateAuthState = (username, password) => {
-      // this.setState({ username, password });
-      const api_url = 'http://localhost:8000/api/v1/member/';
       const auth = {
         username,
         password,
       };
       let data;
     
-      axios.get(api_url, { auth })
+      axios.get(API_URL, { auth })
       .then(res => {
         data = res.data;
         this.setState({
-          members: data
+          members: data.members,
+          username,
+          password,
+          admin: data.admin,
         });
       })
       .catch(err => { })
@@ -281,11 +319,25 @@ export default class App extends React.Component {
       updateAuthState(this.state.username, this.state.password);
       return <h2 className="italic text-2xl">Loading...</h2>
     }
+    const {members, username, password} = this.state;
     return (
       <Router>
         <Routes>
-          <Route path="/add" element={<Add members={this.state.members} />} />
-          <Route path="/edit" element={<Edit members={this.state.members} />} />
+          <Route 
+            path="/add" 
+            element={<Add 
+              members={this.state.members} 
+              auth={{username, password}}
+            />} 
+          />
+          <Route 
+            path="/edit" 
+            element={<Edit 
+              members={this.state.members} 
+              auth={{username, password}} 
+              admin={this.state.admin}
+            />} 
+          />
           <Route path="/" element={<List members={this.state.members} />} />
         </Routes>
       </Router>
