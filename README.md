@@ -20,8 +20,8 @@ This app was built and tested using:
 2. `npm start` from within `frontend/`
 3. Visit `http://localhost:3000` in a browser
 4. **Login Credentials:**
-  a. Username: `example@instawork.com` or `testing@instawork.com` (admin)
-  b. Password: `password` 
+    * Username: `example@instawork.com` or `testing@instawork.com` (admin)
+    * Password: `password` 
 
 ### To test the apps(s):
 1. `python manage.py test --keep` from within `backend/`
