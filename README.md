@@ -1,5 +1,5 @@
 # Instawork Team Member App
-This is a simple app for managing team members, as described in the spec included in this repo ([PDF(Full-stack take-home assignment .pdf)]).
+This is a simple app for managing team members, as described in the spec included in this repo ([PDF](https://github.com/StrictlySkyler/instawork/blob/main/Full-stack%20take-home%20assignment%20.pdf)).
 
 ## Setup
 This app was built and tested using:
