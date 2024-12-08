@@ -14,9 +14,9 @@ def check_login(http_auth_string):
     decoded = base64.b64decode(auth_string).decode('utf-8')
     username, password = decoded.split(':', 1)
     user = authenticate(username=username, password=password)
-    if auth_method.lower() == 'basic' and user.is_superuser:
+    if auth_method == 'Basic' and user is not None and user.is_superuser:
        return 2
-    if auth_method.lower() == 'basic' and user is not None:
+    if auth_method == 'Basic' and user is not None:
        return 1
     else:
        return 0
