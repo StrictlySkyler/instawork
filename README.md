@@ -23,6 +23,10 @@ This app was built and tested using:
   a. Username: `example@instawork.com` or `testing@instawork.com` (admin)
   b. Password: `password` 
 
+### To test the apps(s):
+1. `python manage.py test --keep` from within `backend/`
+2. `npm test` from within `frontend/` for headless, `npm run test:watch` to observe
+
 ## Assumptions
 1. Creating, deleting, promoting admins & restricted access strongly implies login capability
 2. Django Admin's default User model covers most of the requirements covered in the spec but has different fields; probable candidate for subclassing
