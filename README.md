@@ -44,7 +44,7 @@ There is always more to do.  While the code in this app is very simple, it could
 7. Add/Edit member functionality & validation 1hr ([`d94b763`](https://github.com/StrictlySkyler/instawork/commit/d94b7630d762c8269df0516b2aa8f9fe1330f37e))
 8. Delete member functionality & validation 30min ([`96ba7ff`](https://github.com/StrictlySkyler/instawork/commit/96ba7ff577d68b35953a0566fcfc1cd5e4f8c7f7))
 9. Frontend validation 30min ([`276c924`](https://github.com/StrictlySkyler/instawork/commit/276c92433f3691cce06ae639f931bd601e3f94dc))
-10. Tests 2hrs ([`70adb97`](https://github.com/StrictlySkyler/instawork/commit/70adb978e4f9a240b5e58978559b80257b64228e))
+10. Tests 2hrs ([`05e4dbd`](https://github.com/StrictlySkyler/instawork/commit/05e4dbd6d1fc11968fede9a250f28dbadf2ee7c8))
 
 In other words, a single very productive day's worth of work, or about the length of a weekend project.  This was fun to build.
 
