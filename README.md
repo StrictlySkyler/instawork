@@ -38,7 +38,7 @@ This app was built and tested using:
 There is always more to do.  While the code in this app is very simple, it could benefit from both integration and component tests in a production scenario; model instantiation and field validation as well as isolated component rendering come to mind as good places to start.  And it's always ~~hair-raising~~ enjoyable to add a code coverage metric.
 
 ## Time spent
-~8hrs with tests, interspersed by meetings, kids, dinner, and #dadlife:
+~9hrs with tests, interspersed by meetings, kids, dinner, and #dadlife:
 1. Design & thinking ~(like a long-running cron)
 2. Setup & Scaffolding 30min ([`44beeae`](https://github.com/StrictlySkyler/instawork/commit/44beeae944590160e474ab1e366827ea1cacceba))
 3. Routing 30min ([`015fd84`](https://github.com/StrictlySkyler/instawork/commit/015fd84caae1d5e6fbcaed3c8496287442475d53))
@@ -49,6 +49,7 @@ There is always more to do.  While the code in this app is very simple, it could
 8. Delete member functionality & validation 30min ([`96ba7ff`](https://github.com/StrictlySkyler/instawork/commit/96ba7ff577d68b35953a0566fcfc1cd5e4f8c7f7))
 9. Frontend validation 30min ([`276c924`](https://github.com/StrictlySkyler/instawork/commit/276c92433f3691cce06ae639f931bd601e3f94dc))
 10. Tests 2hrs ([`05e4dbd`](https://github.com/StrictlySkyler/instawork/commit/05e4dbd6d1fc11968fede9a250f28dbadf2ee7c8))
+11. Bugs & defects 1hr
 
 In other words, a single very productive day's worth of work, or about the length of a weekend project.  This was fun to build.
 

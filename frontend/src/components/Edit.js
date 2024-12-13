@@ -4,10 +4,12 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 import {
-  API_URL,
   checkValidMember,
+  NO_UPSTREAM_TEXT,
 } from '../App'
-import { ALERT_TEXT } from './Add';
+import { 
+  INVALID_ALERT_TEXT, 
+} from './Add';
 
 export default function Edit (props) {
   const [searchParams] = useSearchParams();
@@ -18,22 +20,19 @@ export default function Edit (props) {
 
   function saveMember (e) {
     if (!checkValidMember(member)) {
-      return alert(ALERT_TEXT);
+      return alert(INVALID_ALERT_TEXT);
     }
-    axios.post(API_URL, member, { auth })
+    axios.post(window.API_URL, member, { auth })
   }
   function deleteMember (e) {
     e.preventDefault();
     if (!window.confirm(`Delete member ${member.email}?`)) return;
-    axios.delete(API_URL, { auth, data: member })
-      .then(res => {
-        props.updateMemberState(res.data);
-        navigate('/')
-      })
+    axios.delete(window.API_URL, { auth, data: member })
+      .then(res => { props.updateMemberState(res.data) })
       .catch(err => {
-        alert(`Something went wrong! Code: ${err.response.status}`);
+        alert(NO_UPSTREAM_TEXT);
         console.error(err);
-      });
+      }).finally(() => navigate('/'))
   };
 
   return (
@@ -125,6 +124,7 @@ export default function Edit (props) {
               className="w-full bg-blue-500 text-white py-2 my-2 rounded hover:bg-blue-300 active:bg-blue-700"
             >Save</button>
             <button
+              id="submit-delete-team-member-button"
               onClick={deleteMember}
               disabled={props.admin !== 2}
               className="disabled:opacity-25 w-full border-red-500 border py-2 my-2 rounded hover:bg-red-300 active:bg-red-700"

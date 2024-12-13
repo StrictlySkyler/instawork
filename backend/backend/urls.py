@@ -16,10 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# from django.conf.urls import url
 from members.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/member/', MemberView.as_view(), name="MemberViewURL")
+    path('api/v1/member/', MemberView.as_view(), name="MemberViewURL"),
+    path('500/', test_no_upstream, name="TestNoUpstream"),
 ]

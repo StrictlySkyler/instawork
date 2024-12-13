@@ -13,8 +13,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "npx cypress run",
-    "test:watch": "npx cypress open",
+    "test": "npx cypress run && git checkout HEAD -- ../backend/db.sqlite3",
+    "test:watch": "npx cypress open && git checkout HEAD -- ../backend/db.sqlite3",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

@@ -11,8 +11,11 @@ import Add from './components/Add';
 import Edit from './components/Edit';
 import Login from './components/Login';
 
-export const API_URL = 'http://localhost:8000/api/v1/member/';
+window.API_URL = window.API_URL ? window.API_URL :
+  'http://localhost:8000/api/v1/member/';
 const FIELD_COUNT = 5;
+export const LOGIN_FAILED_TEXT = 'Unable to login!\n\nCheck your credentials.';
+export const NO_UPSTREAM_TEXT = 'Unable to login!\n\nTry again later.';
 
 export function checkValidMember (member) {
   let valid = true;
@@ -39,8 +42,8 @@ export default class App extends React.Component {
         password,
       };
       let data;
-    
-      axios.get(API_URL, { auth })
+
+      axios.get(window.API_URL, { auth })
       .then(res => {
         data = res.data;
         this.setState({
@@ -51,7 +54,14 @@ export default class App extends React.Component {
         });
       })
       .catch(err => {
-        alert(`Unable to login! Code: ${err.response.status}`);
+        switch (err.status) {
+          case 403:
+            alert(LOGIN_FAILED_TEXT);
+            break;
+          default:
+            alert(NO_UPSTREAM_TEXT);
+            break;
+        }
         console.error(err);
       })
     }

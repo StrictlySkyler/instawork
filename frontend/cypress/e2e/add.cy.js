@@ -1,7 +1,10 @@
 import { loginUser, randomString } from "./login.cy"
-import { ALERT_TEXT } from "../../src/components/Add"
+import { 
+  INVALID_ALERT_TEXT,
+  EXISTS_ALERT_TEXT,
+} from "../../src/components/Add"
 
-const randomEmail = () => `${randomString()}@${randomString()}.com`;
+export const randomEmail = () => `${randomString()}@${randomString()}.com`;
 
 describe('Add member', () => {
   beforeEach(() => {
@@ -41,7 +44,29 @@ describe('Add member', () => {
     const stub = cy.stub();
     cy.on('window:alert', stub);
     cy.get('#submit-add-team-member-button').click().then(() => {
-      expect(stub.getCall(0)).to.be.calledWith(ALERT_TEXT);
+      expect(stub.getCall(0)).to.be.calledWith(INVALID_ALERT_TEXT);
     });
+  })
+  it('alerts if an email is already in use', () => {
+    const first = randomString();
+    const last = randomString();
+    const email = randomEmail();
+    const phone = randomString();
+    const stub = cy.spy();
+    cy.intercept('POST', '/api/v1/member/').as('addMember');
+    cy.get('#first-name-input').type(first);
+    cy.get('#last-name-input').type(last);
+    cy.get('#email-input').type(email);
+    cy.get('#phone-input').type(phone);
+    cy.get('#not-admin').click();
+    cy.get('#submit-add-team-member-button').click();
+    cy.get('#add-member-button').click();
+    cy.get('#first-name-input').type(first);
+    cy.get('#last-name-input').type(last);
+    cy.get('#email-input').type(email);
+    cy.get('#phone-input').type(phone);
+    cy.get('#not-admin').click();
+    cy.on('window:alert', (e) => {expect(e).to.equal(EXISTS_ALERT_TEXT)})
+    cy.get('#submit-add-team-member-button').click()
   })
 })

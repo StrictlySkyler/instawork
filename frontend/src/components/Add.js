@@ -3,10 +3,13 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 import {
-  API_URL,
   checkValidMember,
+  NO_UPSTREAM_TEXT,
 } from '../App'
-export const ALERT_TEXT = 'Please fill out all fields!';
+export const INVALID_ALERT_TEXT = 'Please fill out all fields!';
+export const EXISTS_ALERT_TEXT = `
+  That email already is in use, please pick another!
+`;
 
 export default function Add (props) {
   const member = {};
@@ -15,15 +18,22 @@ export default function Add (props) {
   
   function saveMember (e) {
     if (!checkValidMember(member)) {
-      return alert(ALERT_TEXT);
+      return alert(INVALID_ALERT_TEXT);
     }
-    axios.post(API_URL, member, { auth })
+    axios.post(window.API_URL, member, { auth })
       .then((res) => {
         const members = res.data;
         props.updateMemberState(members);
         navigate('/')
       }).catch(err => {
-        alert(`Something went wrong! Code: ${err.response.status}`);
+        switch (err.status) {
+          case 400:
+            alert(EXISTS_ALERT_TEXT);
+            break;
+          default:
+            alert(NO_UPSTREAM_TEXT);
+            break;
+        }
         console.error(err);
       });
   }

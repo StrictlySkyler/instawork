@@ -1,5 +1,5 @@
 from django.forms import ValidationError
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 from .models import *
@@ -21,6 +21,8 @@ def check_login(http_auth_string):
     else:
        return 0
 
+def test_no_upstream(request):
+   return HttpResponseServerError()
 
 class MemberView(APIView):
     serializer_class = MemberSerializer

@@ -22,7 +22,9 @@ export default function List (props) {
       <hr></hr>
       {props.members.map((member, id) => (
         <div key={id}>
-          <Link to={`/edit?id=${id}`} className="grid grid-cols-4 py-4">
+          <Link 
+            to={`/edit?id=${id}`} 
+            className="grid grid-cols-4 py-4 user-profile-link">
             <img 
               className="w-20 h-20 m-auto" 
               alt={`Avatar for ${member.first_name} ${member.last_name}`}
